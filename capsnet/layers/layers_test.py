@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import tensorflow as tf
 
-from capsnet.layers.lambda_layers import primary_capsule_layer
+from capsnet.layers.layers import primary_capsule_layer
 
 
 class LambdaLayersTest(unittest.TestCase):
