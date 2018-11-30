@@ -25,3 +25,11 @@ class Mask(layers.Layer):
             return tuple([None, input_shape[0][1] * input_shape[0][2]])
         else:
             return tuple([None, input_shape[1] * input_shape[2]])
+
+
+class Length(layers.Layer):
+    def call(self, inputs, **kwargs):
+        return K.sqrt(K.sum(K.square(inputs), -1))
+
+    def compute_output_shape(self, input_shape):
+        return input_shape[:-1]
