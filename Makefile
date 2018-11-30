@@ -38,7 +38,7 @@ lint:
 
 ## Run tests
 test: lint
-	py.test -v --cov-report html --cov fpoi --cov-branch
+	py.test -v --cov-report html --cov capsnet --cov-branch
 
 
 #################################################################################
