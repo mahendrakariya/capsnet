@@ -1,9 +1,10 @@
 import numpy as np
-from keras import layers, models
+from keras import layers, models, callbacks, optimizers
 from keras import backend as K
 
 from capsnet.layers.capsule import Capsule
 from capsnet.layers.layers import primary_capsule_layer, Length, Mask
+from capsnet.layers.loss import margin_loss
 
 K.set_image_data_format('channels_last')
 
@@ -30,3 +31,23 @@ def CapsNet(input_shape, n_class, routings=3):
     eval_model = models.Model(x, [out_caps, decoder(masked_for_inference)])
 
     return train_model, eval_model
+
+
+def train(model, data, args):
+    (x_train, y_train), (x_test, y_test) = data
+
+    log = callbacks.CSVLogger(args.save_dir + "/log.csv")
+    checkpoint = callbacks.ModelCheckpoint(args.save_dir + '/weights-{epoch:02d}.h5', monitor='val_capsnet_acc', save_best_only=True,
+                                           save_weights_only=True, verbose=1)
+    lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
+
+    model.compile(optimizer=optimizers.Adam(lr=args.lr), loss=[margin_loss, 'mse'], loss_weights=[1., args.lam_recon],
+                  metrics={'capsnet': 'accuracy'})
+
+    model.fit([x_train, y_train], [y_train, x_train], batch_size=args.batch_size, epochs=args.epochs,
+              validation_data=[[x_test, y_test], [y_test, x_test]], callbacks=[log, checkpoint, lr_decay])
+
+    model.save_weights(args.save_dir + '/trained_model.h5')
+    print('Trained model saved to \'%s/trained_model.h5\'' % args.save_dir)
+
+    return model
