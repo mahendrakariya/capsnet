@@ -53,3 +53,10 @@ def train(model, data, args):
 
     plot_log(args.save_dir + '/log.csv', show=True)
     return model
+
+
+def test(model, data, args):
+    x_test, y_test = data
+    y_pred, x_recon = model.predict(x_test, batch_size=100)
+
+    print('Test acc:', np.sum(np.argmax(y_pred, 1) == np.argmax(y_test, 1)) / y_test.shape[0])
