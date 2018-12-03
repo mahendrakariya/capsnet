@@ -1,6 +1,6 @@
 from keras import layers
 import tensorflow as tf
-import tensorflow.keras.backend as K
+import keras.backend as K
 
 from capsnet.layers.activation import squash
 
@@ -27,7 +27,7 @@ class Capsule(layers.Layer):
         super(Capsule, self).build(input_shape)
 
     def call(self, inputs, **kwargs):
-        inputs = K.expand_dim(inputs, 1)
+        inputs = K.expand_dims(inputs, 1)
         inputs = K.tile(inputs, [1, self.num_capsule, 1, 1])
         inputs = K.map_fn(lambda x: K.batch_dot(x, self.W, [2, 3]), elems=inputs)
 

@@ -1,5 +1,5 @@
 from keras import layers
-import tensorflow.keras.backend as K
+import keras.backend as K
 
 from capsnet.layers.activation import squash
 

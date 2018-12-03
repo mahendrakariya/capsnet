@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 from capsnet.data.dataset import load_mnist
-from capsnet.models.capsnet import CapsNet, test
+from capsnet.models.capsnet import CapsNet, test, train
 
 
 def main():
@@ -25,6 +25,7 @@ def main():
     model, eval_model = CapsNet(input_shape=x_train.shape[1:], n_class=len(np.unique(np.argmax(y_train, 1))),
                                 routings=args.routings)
     model.summary()
+    train(model=model, data=((x_train, y_train), (x_test, y_test)), args=args)
     test(model=eval_model, data=(x_test, y_test), args=args)
 
 
