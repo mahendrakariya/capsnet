@@ -5,6 +5,7 @@ from keras import backend as K
 from capsnet.layers.capsule import Capsule
 from capsnet.layers.layers import primary_capsule_layer, Length, Mask
 from capsnet.layers.loss import margin_loss
+from capsnet.viz.plot_log import plot_log
 
 K.set_image_data_format('channels_last')
 
@@ -50,4 +51,5 @@ def train(model, data, args):
     model.save_weights(args.save_dir + '/trained_model.h5')
     print('Trained model saved to \'%s/trained_model.h5\'' % args.save_dir)
 
+    plot_log(args.save_dir + '/log.csv', show=True)
     return model
